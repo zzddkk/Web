@@ -20,6 +20,18 @@ const handleVote = (points,setPoints,selected) => {
   setPoints(copy);
 }
 
+const Maxvite = (points,anecdotes) => {
+  let max = Math.max(...points);
+  let index = points.indexOf(max);
+  return (
+    <div>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[index]}</p>
+      <p>Has {max} votes</p>
+    </div>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -34,12 +46,17 @@ const App = () => {
   const [selected, setSelected] = useState(0);
   const [points, setPoints] = useState(Array(anecdotes.length).fill(0));
   return (
-    <div>
-      <p>{anecdotes[selected]}</p>
-      <p>Has {points[selected]} votes</p>
-      <Button onClick={() => SetSelected(anecdotes.length, setSelected)} text="Next Anecdote" />
-      <Button onClick={() => handleVote(points,setPoints,selected)} text="Vote" />
-    </div>
+    <>
+      <div>
+        <p>{anecdotes[selected]}</p>
+        <p>Has {points[selected]} votes</p>
+        <Button onClick={() => SetSelected(anecdotes.length, setSelected)} text="Next Anecdote" />
+        <Button onClick={() => handleVote(points,setPoints,selected)} text="Vote" />
+      </div>
+      <div>
+        {Maxvite(points,anecdotes)}
+      </div>
+    </>
   );
 }
 
