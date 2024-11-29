@@ -5,6 +5,21 @@ const SetSelected = (l, setSelected) => {
   setSelected(num);
 }
 
+
+const Button = ({ text, onClick }) => {
+  return (
+    <button onClick={onClick}>
+      {text}
+    </button>
+  )
+}
+
+const handleVote = (points,setPoints,selected) => {
+  const copy = [...points];
+  copy[selected] += 1;
+  setPoints(copy);
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -17,13 +32,13 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ];
   const [selected, setSelected] = useState(0);
-
+  const [points, setPoints] = useState(Array(anecdotes.length).fill(0));
   return (
     <div>
-      <button onClick={() => SetSelected(anecdotes.length, setSelected)}>
-        Next Anecdote
-      </button>
       <p>{anecdotes[selected]}</p>
+      <p>Has {points[selected]} votes</p>
+      <Button onClick={() => SetSelected(anecdotes.length, setSelected)} text="Next Anecdote" />
+      <Button onClick={() => handleVote(points,setPoints,selected)} text="Vote" />
     </div>
   );
 }
