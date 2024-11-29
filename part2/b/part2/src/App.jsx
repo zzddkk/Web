@@ -1,8 +1,8 @@
 import { useState } from "react"
 
 const App = () => {
-  const [persons, setPersons] = useState([{name : 'Arto Hellas'}])
-  const [newName, setNewName] = useState('')
+  const [persons, setPersons] = useState([{name : 'Arto Hellas',Number: '040-123456'}])
+  const [newPerson, setNewPersons] = useState({name: '', Number: ''})
 
 
   const addperson = (event) => {
@@ -15,16 +15,23 @@ const App = () => {
     }
     event.preventDefault()
     const personObject = {
-      name: newName
+      name: newPerson.name,
+      Number: newPerson.Number
     }
-    checkName(newName)
+    checkName(newPerson.name)
     setPersons(persons.concat(personObject))
   }
 
   const handleNameChange = (event) => {
     console.log(event.target.value)
-    setNewName(event.target.value)
+    setNewPersons({...newPerson, name: event.target.value})
+    
   }
+  const handleNumberChange = (event) => {
+    console.log(event.target.value)
+    setNewPersons({...newPerson, Number: event.target.value})
+  }
+  
 
 
 
@@ -33,14 +40,16 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={addperson}>
         <div>
-          name: <input value={newName} onChange={handleNameChange}/>
-          <input type="submit" value="add"/>
+          name: <input value={newPerson.name} onChange={handleNameChange}/>
         </div>
-          
+        <div>
+          Numbers: <input value={newPerson.Number} onChange={handleNumberChange}/>
+        </div>
+        <input type="submit" value="add"/>
       </form>
       <h2>Numbers</h2>
       <div>
-        {persons.map(person => <p key={person.name}>{person.name}</p>)}
+        {persons.map(person => <p key={person.name}>{person.name} {person.Number}</p>)}
       </div>
     </div>
   )
