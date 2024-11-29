@@ -6,10 +6,18 @@ const App = () => {
 
 
   const addperson = (event) => {
+    const checkName = (name) => {
+      persons.forEach(person => {
+        if(person.name === name){
+          alert(`${name} is already added to phonebook`)
+        }
+      })
+    }
     event.preventDefault()
     const personObject = {
       name: newName
     }
+    checkName(newName)
     setPersons(persons.concat(personObject))
   }
 
@@ -17,6 +25,7 @@ const App = () => {
     console.log(event.target.value)
     setNewName(event.target.value)
   }
+
 
 
   return(
