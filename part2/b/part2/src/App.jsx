@@ -1,10 +1,10 @@
 import { useState } from "react"
 
 const App = () => {
-  const [persons, setPersons] = useState([{name : 'Arto Hellas',Number: '040-123456'}])
-  const [newPerson, setNewPersons] = useState({name: '', Number: ''})
-
-
+  const [persons, setPersons] = useState([{id: 1, name: 'Arto Hellas',Number: '040-123456'}])
+  const [newPerson, setNewPersons] = useState({id: 0, name: '', Number: ''})
+  const [showpersons, setShowPersons] = useState(persons)
+  const [filter, setFilter] = useState('')
   const addperson = (event) => {
     const checkName = (name) => {
       persons.forEach(person => {
@@ -15,6 +15,7 @@ const App = () => {
     }
     event.preventDefault()
     const personObject = {
+      id : persons.length + 1,
       name: newPerson.name,
       Number: newPerson.Number
     }
@@ -31,13 +32,25 @@ const App = () => {
     console.log(event.target.value)
     setNewPersons({...newPerson, Number: event.target.value})
   }
-  
+  const handleFilterChange = (event) => {
+    const filterValue = event.target.value;
+    console.log(filterValue);
+    setFilter(filterValue);
+    const show = persons.filter(person => person.name.includes(filterValue));
+    setShowPersons(show);
+  }
 
 
 
   return(
     <div>
       <h2>Phonebook</h2>
+      <div>
+        {/* the input must bind filter more details on the https://www.w3schools.com/tags/att_input_value.asp
+        filter shown with <input value={"default"} onChange={handleFilterChange}/> the onChange on can handle one character */}
+        filter shown with <input value={filter} onChange={handleFilterChange}/>
+      </div>
+      <h2>Add a new</h2>
       <form onSubmit={addperson}>
         <div>
           name: <input value={newPerson.name} onChange={handleNameChange}/>
@@ -49,7 +62,9 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <div>
-        {persons.map(person => <p key={person.name}>{person.name} {person.Number}</p>)}
+        <ul>
+          {showpersons.map(showperson => <li key={showperson.id}> {showperson.name} {showperson.Number}</li>)}
+        </ul>
       </div>
     </div>
   )
