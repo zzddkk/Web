@@ -25,36 +25,40 @@ const App = () => {
       })}, [])
   const [filter, setFilter] = useState('')
   const addperson = (event) => {
+    let alternumber = false
     event.preventDefault()
     const checkName = (name) => {
-      return(
-      persons.forEach(person => {
-        if(person.name === name){
-          alert(`${name} is already added to phonebook`)
-          axios.put(`http://localhost:3001/persons/${person.id}`, {...person, Number: newPerson.Number}).then(response => {
-            const data = response.data
-            const newpersons = persons.map(person => person.id !== data.id ? person : data)
-            setPersons(newpersons)
-            setShowPersons(newpersons)
-            return true
-          })
+      // 使用for of循环，可以在循环中使用return foreach 则不能
+      for (let person of persons) {
+        if (person.name === name) {
+          alert(`${name} is already added to phonebook`);
+          axios.put(`http://localhost:3001/persons/${person.id}`, { ...person, Number: newPerson.Number })
+            .then(response => {
+              const data = response.data
+              const newPersons = persons.map(person => person.id !== data.id ? person : data)
+              alternumber = true
+              setPersons(newPersons)
+              setShowPersons(newPersons)
+            })
+          return true
         }
-      })
-    )
+      }
+      return false
     }
+    if (checkName(newPerson.name)) {
+      return // 跳出 addPerson 函数
+    }  
     const personObject = {
       name: newPerson.name,
       Number: newPerson.Number
     }
-    const alternumber = checkName(newPerson.name)
-    if (!alternumber) {
-      axios.post('http://localhost:3001/persons', personObject).then(response => {
-        const data = response.data
-        const newpersons = persons.concat(data)
-        setPersons(newpersons)
-        setShowPersons(newpersons)
-      })
-    }
+    axios.post('http://localhost:3001/persons', personObject).then(response => {
+      const data = response.data
+      const newpersons = persons.concat(data)
+      console.log(newpersons)
+      setPersons(newpersons)
+      setShowPersons(newpersons)
+    })
   }
 
   const handleNameChange = (event) => {
