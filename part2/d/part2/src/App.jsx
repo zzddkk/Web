@@ -27,24 +27,34 @@ const App = () => {
   const addperson = (event) => {
     event.preventDefault()
     const checkName = (name) => {
+      return(
       persons.forEach(person => {
         if(person.name === name){
           alert(`${name} is already added to phonebook`)
+          axios.put(`http://localhost:3001/persons/${person.id}`, {...person, Number: newPerson.Number}).then(response => {
+            const data = response.data
+            const newpersons = persons.map(person => person.id !== data.id ? person : data)
+            setPersons(newpersons)
+            setShowPersons(newpersons)
+            return true
+          })
         }
       })
+    )
     }
     const personObject = {
       name: newPerson.name,
       Number: newPerson.Number
     }
-    checkName(newPerson.name)
-
-    axios.post('http://localhost:3001/persons', personObject).then(response => {
-      const data = response.data
-      const newpersons = persons.concat(data)
-      setPersons(newpersons)
-      setShowPersons(newpersons)
-    })
+    const alternumber = checkName(newPerson.name)
+    if (!alternumber) {
+      axios.post('http://localhost:3001/persons', personObject).then(response => {
+        const data = response.data
+        const newpersons = persons.concat(data)
+        setPersons(newpersons)
+        setShowPersons(newpersons)
+      })
+    }
   }
 
   const handleNameChange = (event) => {
