@@ -66,7 +66,7 @@ const App = () => {
 
   const deletePersonfn = (id) => {
     console.log("delete",id)
-    if (window.confirm(`Delete ${id}?`)) {
+    if (window.confirm(`Are sure delete ${id}? the action is irreversible`)) {
       axios.delete(`http://localhost:3001/persons/${id}`)
       const newpersons = persons.filter(person => person.id !== id)
       setPersons(newpersons)
