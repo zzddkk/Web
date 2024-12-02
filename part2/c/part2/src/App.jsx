@@ -1,13 +1,21 @@
-import { useState } from "react"
-
+import { useState, useEffect } from "react"
+import axios from 'axios'
 const App = () => {
-  const [persons, setPersons] = useState([{id: 1, name: 'Arto Hellas',Number: '040-123456'}])
+  const [persons, setPersons] = useState([])
   const [newPerson, setNewPersons] = useState({id: 0, name: '', Number: ''})
   const [showpersons, setShowPersons] = useState(persons)
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+        // 希望重复渲染，这样才能显示所有的数据，setPersons是异步的，在下一次渲染时使用新的状态值所以必须在这里设置showpersons
+        setShowPersons(response.data)
+      })}, [])
   const [filter, setFilter] = useState('')
   const addperson = (event) => {
     event.preventDefault()
-    console.log("Add person")
     const checkName = (name) => {
       persons.forEach(person => {
         if(person.name === name){
@@ -20,13 +28,11 @@ const App = () => {
       name: newPerson.name,
       Number: newPerson.Number
     }
-    console.log("personObject",personObject)
     checkName(newPerson.name)
-    //避免异步问题
     const newpersons = persons.concat(personObject)
-    console.log("newpersons",newpersons)
     setPersons(newpersons)
     setShowPersons(newpersons)
+
   }
 
   const handleNameChange = (event) => {
@@ -64,7 +70,7 @@ const App = () => {
         <div>
           Numbers: <input value={newPerson.Number} onChange={handleNumberChange}/>
         </div>
-        <input type="submit" value="add"/>
+        <button type="submit">add</button>
       </form>
       <h2>Numbers</h2>
       <div>
